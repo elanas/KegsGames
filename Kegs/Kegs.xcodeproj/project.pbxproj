@@ -15,6 +15,7 @@
 		0B428C7C1DE6C3A900CDD170 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0B428C7A1DE6C3A900CDD170 /* LaunchScreen.storyboard */; };
 		0B428C871DE6C3A900CDD170 /* KegsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B428C861DE6C3A900CDD170 /* KegsTests.swift */; };
 		0B428C921DE6C3A900CDD170 /* KegsUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B428C911DE6C3A900CDD170 /* KegsUITests.swift */; };
+		0B428CA01DE6D10F00CDD170 /* Globals.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B428C9F1DE6D10F00CDD170 /* Globals.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +50,7 @@
 		0B428C8D1DE6C3A900CDD170 /* KegsUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = KegsUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0B428C911DE6C3A900CDD170 /* KegsUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KegsUITests.swift; sourceTree = "<group>"; };
 		0B428C931DE6C3A900CDD170 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0B428C9F1DE6D10F00CDD170 /* Globals.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Globals.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 			children = (
 				0B428C6E1DE6C3A900CDD170 /* AppDelegate.swift */,
 				0B428C701DE6C3A900CDD170 /* ViewController.swift */,
+				0B428C9F1DE6D10F00CDD170 /* Globals.swift */,
 				0B428C721DE6C3A900CDD170 /* Main.storyboard */,
 				0B428C781DE6C3A900CDD170 /* Assets.xcassets */,
 				0B428C7A1DE6C3A900CDD170 /* LaunchScreen.storyboard */,
@@ -262,6 +265,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0B428CA01DE6D10F00CDD170 /* Globals.swift in Sources */,
 				0B428C771DE6C3A900CDD170 /* Kegs.xcdatamodeld in Sources */,
 				0B428C711DE6C3A900CDD170 /* ViewController.swift in Sources */,
 				0B428C6F1DE6C3A900CDD170 /* AppDelegate.swift in Sources */,
