@@ -29,12 +29,20 @@ class ViewController: UIViewController {
     var notPlayBtnFontSize:CGFloat = 25
     var playFontBtnSize:CGFloat = 10
 
+    //Swipe Views
+    var swipeViewLeft:SwipeView!
+    var swipeViewRight:SwipeView!
+    var swipeViewCenter:SwipeView!
+    var imageIndex: NSInteger = 1
     
+    var swipeViews:[SwipeView]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+    
         
+        //play button
         self.playButton = UIButton(frame: CGRect(x: Globals.getCenter(outer: Globals.screenWidth, inner: notPlayBtnWidth), y: Globals.getCenter(outer: Globals.screenHeight, inner: notPlayBtnHeight), width: notPlayBtnWidth, height: notPlayBtnHeight))
         self.playButton.layer.cornerRadius = 0.5 * self.playButton.bounds.size.width
         playButton.clipsToBounds = true
@@ -43,7 +51,30 @@ class ViewController: UIViewController {
         //playButton.titleLabel?.font = playButton.titleLabel?.font.withSize(notPlayBtnFontSize)
         playButton.setTitle(notPlayingText, for: UIControlState.normal)
         
+        //swipe view stuff
+        let svW:CGFloat = 200
+        let svH:CGFloat = 200
+        let svX:CGFloat = Globals.getCenter(outer: Globals.screenWidth, inner: svW)
+        let svY:CGFloat = Globals.getCenter(outer: Globals.screenHeight, inner: svH)
+        swipeViewLeft = SwipeView(frame: CGRect(x: svX, y: svY, width: svW, height: svH))
+        swipeViewLeft.backgroundColor = UIColor.green
+        swipeViewRight = SwipeView(frame: CGRect(x: svX, y: svY, width: svW, height: svH))
+        swipeViewRight.backgroundColor = UIColor.blue
+        swipeViewCenter = SwipeView(frame: CGRect(x: svX, y: svY, width: svW, height: svH))
         
+        
+        let swipeRight = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.swiped(gesture:))) // put : at the end of method name
+        swipeRight.direction = UISwipeGestureRecognizerDirection.right
+        self.view.addGestureRecognizer(swipeRight)
+        
+        let swipeLeft = UISwipeGestureRecognizer(target: self, action: #selector(ViewController.swiped(gesture:))) // put : at the end of method name
+        swipeLeft.direction = UISwipeGestureRecognizerDirection.left
+        self.view.addGestureRecognizer(swipeLeft)
+        
+        swipeViews = [SwipeView]()
+        swipeViews.append(swipeViewLeft)
+        swipeViews.append(swipeViewCenter)
+        swipeViews.append(swipeViewRight)
         
         self.view.addSubview(playButton)
     }
@@ -58,10 +89,14 @@ class ViewController: UIViewController {
             
             
             UIView.animate(withDuration: 1.0, animations:{
+                self.swipeViewCenter.removeFromSuperview()
                 self.playButton.frame = CGRect(x: Globals.getCenter(outer: Globals.screenWidth, inner: self.notPlayBtnWidth), y: Globals.getCenter(outer: Globals.screenHeight, inner: self.notPlayBtnHeight), width: self.notPlayBtnWidth, height: self.notPlayBtnHeight)
                 self.playButton.layer.cornerRadius = 0.5 * self.playButton.bounds.size.width
                 self.playButton.titleLabel?.font = UIFont(name: UIFont.systemFont(ofSize: 8).fontName, size: self.notPlayBtnFontSize)
+            }, completion: {
+                (value: Bool) in
             })
+        
             
         }
         
@@ -79,10 +114,65 @@ class ViewController: UIViewController {
                 self.playButton.layer.cornerRadius = 0.5 * self.playButton.bounds.size.width
                 self.playButton.titleLabel?.font = UIFont(name: UIFont.systemFont(ofSize: 8).fontName, size: self.playFontBtnSize)
 
+            }, completion: {
+                (value:Bool) in
+                self.view.addSubview(self.swipeViewCenter)
+
             })
             
+        }
+    }
+    
+    func swiped(gesture: UIGestureRecognizer) {
+        
+        if let swipeGesture = gesture as? UISwipeGestureRecognizer {
+            
+            switch swipeGesture.direction {
+                
+            case UISwipeGestureRecognizerDirection.right :
+                print("User swiped right")
+                
+                // decrease index first
+                
+                imageIndex -= 1
+                
+                // check if index is in range
+                
+                if imageIndex < 0 {
+                    
+                    imageIndex = 2
+                    
+                }
+                self.swipeViewCenter.removeFromSuperview()
+                self.swipeViewCenter = swipeViews[imageIndex]
+                self.view.addSubview(swipeViewCenter)
+                
+            case UISwipeGestureRecognizerDirection.left:
+                print("User swiped Left")
+                
+                // increase index first
+                imageIndex += 1
+                
+                // check if index is in range
+                
+                if imageIndex > 2 {
+                    
+                    imageIndex = 0
+                    
+                }
+                self.swipeViewCenter.removeFromSuperview()
+                self.swipeViewCenter = swipeViews[imageIndex]
+                self.view.addSubview(swipeViewCenter)
+                
+            default:
+                break //stops the code/codes nothing.
+                
+                
+            }
             
         }
+        
+        
     }
 
     override func didReceiveMemoryWarning() {
