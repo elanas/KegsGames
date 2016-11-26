@@ -18,7 +18,7 @@ class ViewController: UIViewController {
     var notPlayBtnHeight:CGFloat = Globals.screenWidth * 0.5
     
     var notPlayingBtnColor:UIColor = UIColor(red: 248/255.0, green: 24/255.0, blue: 67/255.0, alpha: 1.0)
-    var playingBtnColor:UIColor = UIColor(red: 0/255.0, green: 255/255.0, blue: 81/255.0, alpha: 1.0)
+    var playingBtnColor:UIColor = UIColor(red: 50/255.0, green: 255/255.0, blue: 178/255.0, alpha: 1.0)
     
     var notPlayingTitleColor:UIColor = UIColor.white
     var playingTitleColor:UIColor = UIColor.black
@@ -40,7 +40,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-    
+        self.view.backgroundColor = UIColor(red: 35/255.0, green: 182/255.0, blue: 255/255.0, alpha: 1)
         
         //play button
         self.playButton = UIButton(frame: CGRect(x: Globals.getCenter(outer: Globals.screenWidth, inner: notPlayBtnWidth), y: Globals.getCenter(outer: Globals.screenHeight, inner: notPlayBtnHeight), width: notPlayBtnWidth, height: notPlayBtnHeight))
@@ -52,8 +52,8 @@ class ViewController: UIViewController {
         playButton.setTitle(notPlayingText, for: UIControlState.normal)
         
         //swipe view stuff
-        let svW:CGFloat = 200
-        let svH:CGFloat = 200
+        let svW:CGFloat = Globals.screenWidth * 0.8
+        let svH:CGFloat = Globals.screenHeight * 0.5
         let svX:CGFloat = Globals.getCenter(outer: Globals.screenWidth, inner: svW)
         let svY:CGFloat = Globals.getCenter(outer: Globals.screenHeight, inner: svH)
         swipeViewLeft = SwipeView(frame: CGRect(x: svX, y: svY, width: svW, height: svH))
