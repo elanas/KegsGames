@@ -10,6 +10,8 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    var titleLabel:UILabel!
+    
     //Play Button Constants
     var playButton: UIButton!
     var playBtnWidth:CGFloat = Globals.screenWidth * 0.2
@@ -24,7 +26,7 @@ class ViewController: UIViewController {
     var playingTitleColor:UIColor = UIColor.black
     
     var notPlayingText:String = "Press To Play"
-    var playingText:String = " Game On "
+    var playingText:String = " Signoff "
     
     var notPlayBtnFontSize:CGFloat = 25
     var playFontBtnSize:CGFloat = 10
@@ -37,7 +39,17 @@ class ViewController: UIViewController {
     
     var swipeViews:[SwipeView]!
     
+    var contactBtn:UIButton!
+    
+    var returningUser:Bool!
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
+        
+        
+        returningUser = defaults.bool(forKey: "returningUser")
+
+        
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         self.view.backgroundColor = UIColor(red: 35/255.0, green: 182/255.0, blue: 255/255.0, alpha: 1)
@@ -57,9 +69,7 @@ class ViewController: UIViewController {
         let svX:CGFloat = Globals.getCenter(outer: Globals.screenWidth, inner: svW)
         let svY:CGFloat = Globals.getCenter(outer: Globals.screenHeight, inner: svH)
         swipeViewLeft = SwipeView(frame: CGRect(x: svX, y: svY, width: svW, height: svH))
-        swipeViewLeft.backgroundColor = UIColor.green
         swipeViewRight = SwipeView(frame: CGRect(x: svX, y: svY, width: svW, height: svH))
-        swipeViewRight.backgroundColor = UIColor.blue
         swipeViewCenter = SwipeView(frame: CGRect(x: svX, y: svY, width: svW, height: svH))
         
         
@@ -76,7 +86,51 @@ class ViewController: UIViewController {
         swipeViews.append(swipeViewCenter)
         swipeViews.append(swipeViewRight)
         
+        let contactBtnWidth:CGFloat = swipeViewCenter.frame.width
+        let contactBtnHeight:CGFloat = 40
+        let contactBtnX:CGFloat = svX
+        let contactBtnY:CGFloat = svY + svH + 2
+            
+        contactBtn = UIButton(frame: CGRect(x:contactBtnX, y:contactBtnY, width: contactBtnWidth, height:contactBtnHeight))
+        contactBtn.backgroundColor = UIColor.white
+        contactBtn.layer.cornerRadius = 6
+        contactBtn.setTitle("Setup a Game", for: UIControlState.normal)
+        contactBtn.setTitleColor(UIColor.black.withAlphaComponent(0.8), for: UIControlState.normal)
+        contactBtn.titleLabel?.font = UIFont(name: "Avenir", size: 20)
+        contactBtn.isHidden = true
+        
+        contactBtn.addTarget(self, action: #selector(contactPress), for: UIControlEvents.touchDown)
+        contactBtn.addTarget(self, action: #selector(contactUnpress), for: UIControlEvents.touchUpInside)
+        
+        //title label
+        let titleLabelWidth:CGFloat = Globals.screenWidth
+        let titleLabelHeight:CGFloat = 30
+        let titleLabelX:CGFloat = 0
+        let titleLabelY:CGFloat = svY - titleLabelHeight - 30
+            
+        titleLabel = UILabel(frame: CGRect(x:titleLabelX, y:titleLabelY, width: titleLabelWidth, height:titleLabelHeight))
+        titleLabel.text = "Players Near You:"
+        titleLabel.textAlignment = NSTextAlignment.center
+        titleLabel.font = UIFont(name: "Avenir", size: 25)
+        titleLabel.isHidden = true
+        
         self.view.addSubview(playButton)
+        self.view.addSubview(contactBtn)
+        self.view.addSubview(titleLabel)
+    }
+    
+    func contactPress() {
+        self.contactBtn.backgroundColor = UIColor.white.withAlphaComponent(0.7)
+        
+        contactBtn.setTitle("Request Pending...", for: UIControlState.normal)
+        
+        //TODO: logic for contacting other play about request
+
+        
+    }
+    
+    func contactUnpress() {
+        self.contactBtn.backgroundColor = UIColor.white
     }
     
     func pressPlayButton() {
@@ -87,12 +141,13 @@ class ViewController: UIViewController {
             playButton.setTitleColor(notPlayingTitleColor, for: UIControlState.normal)
             playButton.setTitle(notPlayingText, for: UIControlState.normal)
             
-            
+            self.contactBtn.isHidden = true
+            self.titleLabel.isHidden = true
             UIView.animate(withDuration: 1.0, animations:{
                 self.swipeViewCenter.removeFromSuperview()
                 self.playButton.frame = CGRect(x: Globals.getCenter(outer: Globals.screenWidth, inner: self.notPlayBtnWidth), y: Globals.getCenter(outer: Globals.screenHeight, inner: self.notPlayBtnHeight), width: self.notPlayBtnWidth, height: self.notPlayBtnHeight)
-                self.playButton.layer.cornerRadius = 0.5 * self.playButton.bounds.size.width
                 self.playButton.titleLabel?.font = UIFont(name: UIFont.systemFont(ofSize: 8).fontName, size: self.notPlayBtnFontSize)
+                self.playButton.layer.cornerRadius = 0.5 * self.playButton.bounds.size.width
             }, completion: {
                 (value: Bool) in
             })
@@ -102,6 +157,38 @@ class ViewController: UIViewController {
         
         //playing
         else {
+            
+            if defaults.bool(forKey: "returningUser") == false {
+                
+                let infoVC:InfoViewController = InfoViewController()
+                
+                self.present(infoVC, animated: true, completion: {
+                    
+                })
+                
+                
+                playButton.backgroundColor = playingBtnColor
+                playButton.setTitleColor(playingTitleColor, for: UIControlState.normal)
+                playButton.setTitle("Save", for: UIControlState.normal)
+                
+                let pX: CGFloat = Globals.screenWidth - self.playBtnWidth - 15
+                let pY: CGFloat = Globals.screenHeight - self.playBtnHeight - 15
+                
+                UIView.animate(withDuration: 1.0, animations:{
+                    self.playButton.frame = CGRect(x: pX, y:pY, width: self.playBtnWidth, height: self.playBtnHeight)
+                    self.playButton.layer.cornerRadius = 0.5 * self.playButton.bounds.size.width
+                    self.playButton.titleLabel?.font = UIFont(name: UIFont.systemFont(ofSize: 8).fontName, size: self.playFontBtnSize)
+                    
+                }, completion: {
+                    (value:Bool) in
+                    self.view.addSubview(self.swipeViewCenter)
+                    self.contactBtn.isHidden = false
+                    self.titleLabel.isHidden = false
+                })
+                
+                return
+            }
+            
             playButton.backgroundColor = playingBtnColor
             playButton.setTitleColor(playingTitleColor, for: UIControlState.normal)
             playButton.setTitle(playingText, for: UIControlState.normal)
@@ -117,13 +204,21 @@ class ViewController: UIViewController {
             }, completion: {
                 (value:Bool) in
                 self.view.addSubview(self.swipeViewCenter)
-
+                self.contactBtn.isHidden = false
+                self.titleLabel.isHidden = false
             })
             
         }
     }
     
+    func resetContactButton() {
+        //TODO: this should be setup by pulling from the server info about the user
+        self.contactBtn.setTitle("Setup Game", for: UIControlState.normal)
+    }
+    
     func swiped(gesture: UIGestureRecognizer) {
+        
+        self.resetContactButton()
         
         if let swipeGesture = gesture as? UISwipeGestureRecognizer {
             

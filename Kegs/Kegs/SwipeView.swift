@@ -19,18 +19,22 @@ class SwipeView: UIView {
         UILabel.appearance().font = UIFont(name: "Avenir", size: 15)
         
         super.init(frame: frame)
-        backgroundColor = UIColor(red: 118/255.0, green: 207/255.0, blue: 255/255.0, alpha: 1)
+        
+        let ranColor:CGFloat = CGFloat(Int(arc4random_uniform(255) + 1))
+        
+        backgroundColor = UIColor(red: ranColor/255.0, green: 207/255.0, blue: 255/255.0, alpha: 1)
         layer.cornerRadius = 5
         
         let selfieWidth:CGFloat = frame.width * 0.45
-        let selfieHeight:CGFloat = selfieWidth * Globals.screenRatio
+        let selfieHeight:CGFloat = selfieWidth * (Globals.screenRatio * 0.85)
         let selfieX:CGFloat = 10
         let selfieY:CGFloat = Globals.getCenter(outer: self.frame.height, inner: selfieHeight)
             
         selfie = UIImageView(frame: CGRect(x:selfieX, y:selfieY, width: selfieWidth, height:selfieHeight))
-        selfie.image = UIImage(named: "camilla.png")
+        selfie.image = UIImage(named: "elana.JPG")
         selfie.layer.cornerRadius = 6
         selfie.layer.masksToBounds = true
+        selfie.contentMode = UIViewContentMode.scaleToFill
         
         let nameLabelWidth:CGFloat = frame.width * 0.45
         let nameLabelHeight:CGFloat = 20
@@ -55,7 +59,7 @@ class SwipeView: UIView {
         distLabel.adjustsFontSizeToFitWidth = true
         distLabel.textAlignment = NSTextAlignment.center
         
-        let commentMargin:CGFloat = 30
+        let commentMargin:CGFloat = self.frame.height * 0.08
         let commentsLabelWidth:CGFloat = nameLabelWidth
         let commentsLabelX:CGFloat = (frame.width * 0.75) - (commentsLabelWidth/2)
         let commentsLabelY:CGFloat = distLabelY + distLabelHeight + commentMargin
@@ -63,11 +67,16 @@ class SwipeView: UIView {
         
         commentsLabel = UITextView(frame: CGRect(x:commentsLabelX, y:commentsLabelY, width: commentsLabelWidth, height:commentsLabelHeight))
         
-        commentsLabel.text = "• Catan \n • Resistance \n • Avalon"
-        commentsLabel.adjustsFontForContentSizeCategory = true
-        commentsLabel.textAlignment = NSTextAlignment.center
+        commentsLabel.text = "• Catan \n• Resistance \n• Avalon"
+        if #available(iOS 10.0, *) {
+            commentsLabel.adjustsFontForContentSizeCategory = true
+        } else {
+            // Fallback on earlier versions
+        }
+        commentsLabel.textAlignment = NSTextAlignment.left
         commentsLabel.backgroundColor = UIColor.clear
-        commentsLabel.font = UIFont(name: "Avenir", size: 20)
+        commentsLabel.font = UIFont(name: "Avenir", size: 18)
+        commentsLabel.isEditable = false
         
         self.addSubview(selfie)
         self.addSubview(nameLabel)
